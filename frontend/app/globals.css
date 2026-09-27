@@ -1,0 +1,424 @@
+/* ============================================================
+   globals.css — Global styles for Zenith Bank Clone
+   ============================================================
+   Plain CSS only — no Tailwind, no frameworks.
+   These styles apply to every page in the app.
+   ============================================================ */
+
+/* ------------ Reset ------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------ Design tokens (CSS variables) ------------ */
+/* Change a value here and it updates everywhere in the app. */
+:root {
+  /* Brand colours — sampled from reference screenshots */
+  --red:           #c8102e;   /* Zenith primary red */
+  --red-dark:      #a8001e;   /* Darker red for hover / active */
+  --red-header:    #c8102e;   /* Page header background */
+
+  /* Legacy aliases — kept so existing pages don't break */
+  --color-primary:      #c8102e;
+  --color-primary-dark: #a8001e;
+
+  /* Backgrounds */
+  --bg-page:       #f5f5f7;   /* App background — very light grey */
+  --bg-white:      #ffffff;
+  --bg-card:       #ffffff;
+
+  /* Text */
+  --text-primary:  #1a1a1a;   /* Main body text */
+  --text-secondary:#555555;   /* Sub-labels */
+  --text-light:    #888888;   /* Placeholder / hint text */
+
+  /* Legacy aliases */
+  --color-bg:         #f5f5f7;
+  --color-white:      #ffffff;
+  --color-text:       #1a1a1a;
+  --color-text-light: #666666;
+
+  /* Borders */
+  --border:        #e4e4e4;   /* Card borders — thin, subtle */
+  --color-border:  #e4e4e4;
+
+  /* Status colours */
+  --color-success: #28a745;
+  --color-error:   #dc3545;
+  --color-warning: #f59e0b;
+
+  /* Spacing */
+  --radius-sm:   4px;
+  --radius:      6px;    /* Cards in reference are softly rounded, not large */
+  --radius-lg:   12px;
+  --border-radius: 6px; /* legacy alias */
+
+  /* Shadows — reference uses very subtle shadows */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow:      0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow-lg:   0 4px 12px rgba(0, 0, 0, 0.10);
+
+  /* Layout */
+  --sidebar-width:  220px;
+  --bottom-nav-h:   60px;
+  --header-h:       52px;   /* Red page header height */
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-size-xs:   11px;
+  --font-size-sm:   12px;
+  --font-size-base: 14px;
+  --font-size-md:   15px;
+  --font-size-lg:   16px;
+  --font-size-xl:   18px;
+  --font-size-2xl:  20px;
+}
+
+/* ------------ Base ------------ */
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ------------ App shell ------------ */
+/* Every authenticated page wraps content in .app-layout + .main-content */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+}
+
+/* Desktop: offset from sidebar */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  /* Extra bottom padding so content isn't hidden by bottom nav on mobile */
+  padding-bottom: calc(var(--bottom-nav-h) + 16px);
+}
+
+/* Mobile: no sidebar offset, add bottom-nav clearance */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding-bottom: calc(var(--bottom-nav-h) + 20px);
+  }
+}
+
+/* ------------ Page header (red bar at top of pages) ------------ */
+/* Used by PageHeader.jsx component */
+.page-header {
+  background-color: var(--red-header);
+  color: #fff;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 12px;
+}
+
+.page-header-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  text-align: center;
+}
+
+/* When the header has a back arrow, the title should still be centred */
+.page-header-has-back .page-header-title {
+  margin-right: 32px; /* compensate for the back-arrow width */
+}
+
+.page-header-back {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+/* ------------ Service card (3-column grids) ------------ */
+/* Used by ServiceCard.jsx and ServiceGrid.jsx */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;           /* reference uses a grid-line look */
+  background-color: var(--border);   /* the gap colour IS the border */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 12px 16px;
+}
+
+.service-card {
+  background-color: var(--bg-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 8px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-primary);
+  /* No individual border-radius — the grid creates the look */
+  transition: background-color 0.12s ease;
+  min-height: 90px;
+}
+
+.service-card:active,
+.service-card:hover {
+  background-color: #fafafa;
+}
+
+/* The icon wrapper inside each service card */
+.service-card-icon {
+  font-size: 26px;
+  color: var(--red);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+/* The label under the icon */
+.service-card-label {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 90px;
+}
+
+/* ------------ Search bar ------------ */
+.search-bar-wrap {
+  margin: 12px 16px;
+  position: relative;
+}
+
+.search-bar-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 16px 0 40px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-white);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.search-bar-input:focus {
+  border-color: var(--red);
+}
+
+.search-bar-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* ------------ Section title ------------ */
+.section-title {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 16px 16px 8px;
+}
+
+/* ------------ Recent activity list item ------------ */
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.activity-info { flex: 1; min-width: 0; }
+.activity-name {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.activity-date {
+  font-size: var(--font-size-sm);
+  color: var(--text-light);
+  margin-top: 1px;
+}
+
+/* ------------ Buttons ------------ */
+.btn-primary {
+  background-color: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 13px 24px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+.btn-primary:hover    { background-color: var(--red-dark); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--red);
+  border: 2px solid var(--red);
+  border-radius: var(--radius);
+  padding: 11px 24px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.btn-secondary:hover { background-color: var(--red); color: #fff; }
+
+/* ------------ Card ------------ */
+.card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+}
+
+/* ------------ Form fields ------------ */
+.form-field { margin-bottom: 16px; }
+
+.form-field label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  font-size: var(--font-size-base);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--red);
+}
+
+/* ------------ Status messages ------------ */
+.message-error {
+  background-color: #fff5f5;
+  color: var(--color-error);
+  border: 1px solid #ffcccc;
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: var(--font-size-base);
+  margin-bottom: 14px;
+}
+
+.message-success {
+  background-color: #f0fff4;
+  color: var(--color-success);
+  border: 1px solid #c3e6cb;
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: var(--font-size-base);
+  margin-bottom: 14px;
+}
+
+/* ------------ Legacy layout helpers (keep for existing pages) ------------ */
+.page-container      { max-width: 480px; margin: 0 auto; padding: 20px 16px; }
+.page-container-wide { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+.page-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+/* ------------ Loading spinner ------------ */
+.loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+  font-size: var(--font-size-md);
+  gap: 10px;
+}
+
+/* ------------ Error box ------------ */
+.error-box {
+  background: #fff5f5;
+  color: var(--red);
+  border: 1px solid #ffcccc;
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  margin: 12px 16px;
+  font-size: var(--font-size-base);
+}
